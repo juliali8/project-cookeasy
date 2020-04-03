@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "145605307116",
+    "firebase_url": "https://cookeasy-android.firebaseio.com",
+    "project_id": "cookeasy-android",
+    "storage_bucket": "cookeasy-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:145605307116:android:8e3ac3c01ef37079c553c9",
+        "android_client_info": {
+          "package_name": "com.example.cookeasy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "145605307116-3rcilhf1u5lnv747hlmtvffe72g0gspv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXaG26hKrMbdQ6zHet5k4n2zpuh3wHL-s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "145605307116-3rcilhf1u5lnv747hlmtvffe72g0gspv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
