@@ -60,7 +60,7 @@ class IngredientsActivity : AppCompatActivity() {
 
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
 
-        val ref = FirebaseDatabase.getInstance().getReference("/ingredients")
+        val ref = FirebaseDatabase.getInstance().getReference("/ingredients/$uid")
         ref.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
 //               val adapter = IngredientsAdapter<RecyclerView.ViewHolder>()
@@ -112,10 +112,10 @@ class IngredientsActivity : AppCompatActivity() {
     }
 
     private fun writeNewIngredient(ingredientName: String) {
-//        val uid = FirebaseAuth.getInstance().uid?: ""
+        val uid = FirebaseAuth.getInstance().uid?: ""
         val ingredient = IngredientItem(ingredientName)
 //        FirebaseDatabase.getInstance().getReference("/users/$uid").setValue(user)
-        FirebaseDatabase.getInstance().getReference("/ingredients").push().setValue(ingredient)
+        FirebaseDatabase.getInstance().getReference("/ingredients/$uid").push().setValue(ingredient)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -132,6 +132,12 @@ class IngredientsActivity : AppCompatActivity() {
             }
             R.id.groceryMenuItem ->{
                 val intent = Intent(this, GroceriesActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+            R.id.logoutMenuItem ->{
+                FirebaseAuth.getInstance().signOut()
+                val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 return true
             }

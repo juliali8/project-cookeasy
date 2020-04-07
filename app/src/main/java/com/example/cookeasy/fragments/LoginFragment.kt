@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.cookeasy.activities.IngredientsActivity
 import com.example.cookeasy.activities.MainActivity
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_login.*
@@ -28,7 +29,7 @@ class LoginFragment : Fragment() {
         val user = FirebaseAuth.getInstance().currentUser
         if (user != null) {
             // User is signed in
-            val i = Intent(this@LoginFragment.context, MainActivity::class.java)
+            val i = Intent(this@LoginFragment.context, IngredientsActivity::class.java)
             i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(i)
         } else {
@@ -54,7 +55,7 @@ class LoginFragment : Fragment() {
                 auth.signInWithEmailAndPassword(email.text.toString(), password.text.toString())
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            val intent = Intent(this@LoginFragment.context, MainActivity::class.java)
+                            val intent = Intent(this@LoginFragment.context, IngredientsActivity::class.java)
                             startActivity(intent)
                         } else {
                             loginStatusMsg.text = "Please double check your username and password."

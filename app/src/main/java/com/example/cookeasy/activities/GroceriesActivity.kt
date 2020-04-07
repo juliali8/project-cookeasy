@@ -60,7 +60,7 @@ class GroceriesActivity : AppCompatActivity() {
 
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
 
-        val ref = FirebaseDatabase.getInstance().getReference("/groceries")
+        val ref = FirebaseDatabase.getInstance().getReference("/groceries/$uid")
         ref.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
 
@@ -110,10 +110,10 @@ class GroceriesActivity : AppCompatActivity() {
     }
 
     private fun writeNewGrocery(groceryName: String) {
-//        val uid = FirebaseAuth.getInstance().uid?: ""
+        val uid = FirebaseAuth.getInstance().uid?: ""
         val grocery = GroceryItem(groceryName)
 //        FirebaseDatabase.getInstance().getReference("/users/$uid").setValue(user)
-        FirebaseDatabase.getInstance().getReference("/groceries").push().setValue(grocery)
+        FirebaseDatabase.getInstance().getReference("/groceries/$uid").push().setValue(grocery)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -131,6 +131,12 @@ class GroceriesActivity : AppCompatActivity() {
             }
             R.id.groceryMenuItem ->{
                 Toast.makeText(applicationContext, "grocery item clicked", Toast.LENGTH_LONG).show()
+                return true
+            }
+            R.id.logoutMenuItem ->{
+                FirebaseAuth.getInstance().signOut()
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
                 return true
             }
             else -> super.onOptionsItemSelected(item)
