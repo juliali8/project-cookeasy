@@ -26,6 +26,7 @@ import com.example.cookeasy.objects.GroceryItem
 import kotlinx.android.synthetic.main.activity_groceries.*
 import kotlinx.android.synthetic.main.enter_grocery.*
 import kotlinx.android.synthetic.main.enter_grocery.view.*
+import kotlinx.android.synthetic.main.grocery_item.*
 
 
 class GroceriesActivity : AppCompatActivity() {
@@ -88,6 +89,18 @@ class GroceriesActivity : AppCompatActivity() {
 //        return list
     }
 
+    fun deleteItemFromView(view: View) {
+        val index = groceryList.indexOf(GroceryItem(itemName.text.toString()))
+        recyclerView.adapter = GroceriesAdapter(groceryList)
+        groceryList.remove(GroceryItem(itemName.text.toString()))
+        val adapter = recyclerView.adapter as GroceriesAdapter
+        adapter.removeItem()
+        recyclerView.layoutManager = LinearLayoutManager(this@GroceriesActivity)
+        recyclerView.setHasFixedSize(true)
+        Log.d("delete", "button clicked!")
+        deleteGroceryFromDatabase(itemName.text.toString())
+    }
+
     fun dialogView(view: View) {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.enter_grocery, null)
         val builder = AlertDialog.Builder(this)
@@ -115,6 +128,29 @@ class GroceriesActivity : AppCompatActivity() {
 //        FirebaseDatabase.getInstance().getReference("/users/$uid").setValue(user)
         FirebaseDatabase.getInstance().getReference("/groceries/$uid").push().setValue(grocery)
     }
+
+    private fun deleteGroceryFromDatabase(groceryName: String) {
+        val uid = FirebaseAuth.getInstance().uid?: ""
+//        FirebaseDatabase.getInstance().getReference("/groceries/$uid").child("name").removeValue()
+
+//        val grocery = GroceryItem(groceryName)
+//        val grocery = it.child("name").getValue(String::class.java).toString()
+
+        val query = FirebaseDatabase.getInstance().getReference("/groceries/$uid").child("name").equalTo(groceryName)
+
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (snapshot in dataSnapshot.children) {
+                    snapshot.ref.removeValue()
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+
+            }
+        })
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater

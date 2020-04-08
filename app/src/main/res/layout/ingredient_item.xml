@@ -16,6 +16,14 @@
             android:text="Ingredient Item"
             android:textSize="20dp" />
 
+        <Button
+            android:id="@+id/deleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="deleteItemFromView"
+            android:text="X"
+            android:layout_alignParentRight="true"/>
+
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

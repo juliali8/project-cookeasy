@@ -10,7 +10,9 @@ import com.example.cookeasy.R
 import com.example.cookeasy.objects.IngredientItem
 import kotlinx.android.synthetic.main.ingredient_item.view.*
 
-class IngredientsAdapter(private val ingredientList: List<IngredientItem>) : RecyclerView.Adapter<IngredientsAdapter.IngredientViewHolder>() {
+class IngredientsAdapter(private val ingredientList: ArrayList<IngredientItem>) : RecyclerView.Adapter<IngredientsAdapter.IngredientViewHolder>() {
+
+    private var index: Int = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IngredientViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.ingredient_item, parent, false)
@@ -22,6 +24,12 @@ class IngredientsAdapter(private val ingredientList: List<IngredientItem>) : Rec
     override fun onBindViewHolder(holder: IngredientViewHolder, position: Int) {
         val currentItem = ingredientList[position]
         holder.textView.text = currentItem.name
+        index = holder.adapterPosition
+    }
+
+    fun removeItem() {
+        ingredientList.removeAt(index)
+        notifyItemRemoved(index)
     }
 
     class IngredientViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

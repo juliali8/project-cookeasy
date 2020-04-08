@@ -26,6 +26,13 @@ import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.view.*
 import android.widget.Toast
+import com.example.cookeasy.adapters.GroceriesAdapter
+import com.example.cookeasy.objects.GroceryItem
+import kotlinx.android.synthetic.main.activity_groceries.*
+import kotlinx.android.synthetic.main.activity_ingredients.recyclerView
+import kotlinx.android.synthetic.main.grocery_item.*
+import kotlinx.android.synthetic.main.grocery_item.itemName
+import kotlinx.android.synthetic.main.ingredient_item.*
 
 
 class IngredientsActivity : AppCompatActivity() {
@@ -88,6 +95,17 @@ class IngredientsActivity : AppCompatActivity() {
         })
 
 //        return list
+    }
+
+    fun deleteItemFromView(view: View) {
+        val index = ingredientList.indexOf(IngredientItem(itemName.text.toString()))
+        recyclerView.adapter = IngredientsAdapter(ingredientList)
+        ingredientList.remove(IngredientItem(itemName.text.toString()))
+        val adapter = recyclerView.adapter as IngredientsAdapter
+        adapter.removeItem()
+        recyclerView.layoutManager = LinearLayoutManager(this@IngredientsActivity)
+        recyclerView.setHasFixedSize(true)
+        Log.d("delete", "button clicked!")
     }
 
     fun dialogView(view: View) {

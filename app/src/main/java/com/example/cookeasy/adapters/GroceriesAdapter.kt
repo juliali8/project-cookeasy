@@ -11,7 +11,9 @@ import com.example.cookeasy.objects.GroceryItem
 import com.example.cookeasy.objects.IngredientItem
 import kotlinx.android.synthetic.main.ingredient_item.view.*
 
-class GroceriesAdapter(private val groceryList: List<GroceryItem>) : RecyclerView.Adapter<GroceriesAdapter.GroceriesViewHolder>() {
+class GroceriesAdapter(private val groceryList: ArrayList<GroceryItem>) : RecyclerView.Adapter<GroceriesAdapter.GroceriesViewHolder>() {
+
+    private var index: Int = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroceriesViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.grocery_item, parent, false)
@@ -23,7 +25,15 @@ class GroceriesAdapter(private val groceryList: List<GroceryItem>) : RecyclerVie
     override fun onBindViewHolder(holder: GroceriesViewHolder, position: Int) {
         val currentItem = groceryList[position]
         holder.textView.text = currentItem.name
+
+        index = holder.adapterPosition
     }
+
+    fun removeItem() {
+        groceryList.removeAt(index)
+        notifyItemRemoved(index)
+    }
+
 
     class GroceriesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textView: TextView = itemView.itemName

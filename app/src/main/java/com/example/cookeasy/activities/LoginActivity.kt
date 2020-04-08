@@ -15,6 +15,7 @@ class LoginActivity : AppCompatActivity() {
         val fragmentAdapter = LoginPagerAdapter(supportFragmentManager)
         viewPager.adapter = fragmentAdapter
         tabs.setupWithViewPager(viewPager)
+
     }
 
 
