@@ -91,12 +91,15 @@ class GroceriesActivity : AppCompatActivity() {
 
     fun deleteItemFromView(view: View) {
         val index = groceryList.indexOf(GroceryItem(itemName.text.toString()))
-        recyclerView.adapter = GroceriesAdapter(groceryList)
-        groceryList.remove(GroceryItem(itemName.text.toString()))
+//        recyclerView.adapter = GroceriesAdapter(groceryList)
+//        recyclerView.layoutManager = LinearLayoutManager(this@GroceriesActivity)
+//        recyclerView.setHasFixedSize(true)
+        groceryList.removeAt(index)
         val adapter = recyclerView.adapter as GroceriesAdapter
-        adapter.removeItem()
-        recyclerView.layoutManager = LinearLayoutManager(this@GroceriesActivity)
-        recyclerView.setHasFixedSize(true)
+        adapter.removeItem(index)
+//        recyclerView.adapter = GroceriesAdapter(groceryList)
+//        recyclerView.layoutManager = LinearLayoutManager(this@GroceriesActivity)
+//        recyclerView.setHasFixedSize(true)
         Log.d("delete", "button clicked!")
         deleteGroceryFromDatabase(itemName.text.toString())
     }
@@ -114,9 +117,11 @@ class GroceriesActivity : AppCompatActivity() {
                 writeNewGrocery(groceryInput)
                 val item = GroceryItem(groceryInput)
                 groceryList.add(item)
-                recyclerView.adapter = GroceriesAdapter(groceryList)
-                recyclerView.layoutManager = LinearLayoutManager(this@GroceriesActivity)
-                recyclerView.setHasFixedSize(true)
+                val adapter = recyclerView.adapter as GroceriesAdapter
+                adapter.notifyDataSetChanged()
+//                recyclerView.adapter = GroceriesAdapter(groceryList)
+//                recyclerView.layoutManager = LinearLayoutManager(this@GroceriesActivity)
+//                recyclerView.setHasFixedSize(true)
                 alertDialog.dismiss()
             }
         }
@@ -136,7 +141,7 @@ class GroceriesActivity : AppCompatActivity() {
 //        val grocery = GroceryItem(groceryName)
 //        val grocery = it.child("name").getValue(String::class.java).toString()
 
-        val query = FirebaseDatabase.getInstance().getReference("/groceries/$uid").child("name").equalTo(groceryName)
+        val query = FirebaseDatabase.getInstance().getReference("/groceries/$uid").orderByChild("name").equalTo(groceryName)
 
         query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {

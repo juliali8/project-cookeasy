@@ -3,6 +3,7 @@ package com.example.cookeasy.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -26,16 +27,24 @@ class GroceriesAdapter(private val groceryList: ArrayList<GroceryItem>) : Recycl
         val currentItem = groceryList[position]
         holder.textView.text = currentItem.name
 
-        index = holder.adapterPosition
+        holder.button.setOnClickListener {
+            index = holder.adapterPosition
+            groceryList.removeAt(index)
+            notifyDataSetChanged()
+        }
+
     }
 
-    fun removeItem() {
+    fun removeItem(position: Int) {
         groceryList.removeAt(index)
-        notifyItemRemoved(index)
+        notifyDataSetChanged()
+//        notifyItemRemoved(index)
+//        notifyItemRangeChanged(index, groceryList.size)
     }
 
 
     class GroceriesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textView: TextView = itemView.itemName
+        val button: Button = itemView.deleteButton
     }
 }

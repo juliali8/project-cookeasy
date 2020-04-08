@@ -3,6 +3,7 @@ package com.example.cookeasy.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -24,7 +25,12 @@ class IngredientsAdapter(private val ingredientList: ArrayList<IngredientItem>) 
     override fun onBindViewHolder(holder: IngredientViewHolder, position: Int) {
         val currentItem = ingredientList[position]
         holder.textView.text = currentItem.name
-        index = holder.adapterPosition
+
+        holder.button.setOnClickListener {
+            index = holder.adapterPosition
+            ingredientList.removeAt(index)
+            notifyItemRemoved(index)
+        }
     }
 
     fun removeItem() {
@@ -34,5 +40,6 @@ class IngredientsAdapter(private val ingredientList: ArrayList<IngredientItem>) 
 
     class IngredientViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textView: TextView = itemView.itemName
+        val button: Button = itemView.deleteButton
     }
 }
