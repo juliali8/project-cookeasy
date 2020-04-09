@@ -24,7 +24,7 @@ class FavAdapter(private val recipeList: ArrayList<RecipeItem>) : RecyclerView.A
 
     override fun getItemCount() = recipeList.size
 
-    override fun onBindViewHolder(holder: IngredientViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: FavViewHolder, position: Int) {
         val currentItem = recipeList[position]
         holder.textView.text = currentItem.name
 
@@ -40,7 +40,7 @@ class FavAdapter(private val recipeList: ArrayList<RecipeItem>) : RecyclerView.A
         notifyItemRemoved(index)
     }
 
-    class IngredientViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class FavViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textView: TextView = itemView.itemName
         val button: Button = itemView.deleteButton
     }
