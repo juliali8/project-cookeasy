@@ -10,7 +10,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.cookeasy.R
 import com.example.cookeasy.objects.GroceryItem
 import com.example.cookeasy.objects.IngredientItem
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import kotlinx.android.synthetic.main.grocery_item.view.*
 import kotlinx.android.synthetic.main.ingredient_item.view.*
+import kotlinx.android.synthetic.main.ingredient_item.view.deleteButton
+import kotlinx.android.synthetic.main.ingredient_item.view.itemName
 
 class GroceriesAdapter(private val groceryList: ArrayList<GroceryItem>) : RecyclerView.Adapter<GroceriesAdapter.GroceriesViewHolder>() {
 
@@ -28,6 +36,15 @@ class GroceriesAdapter(private val groceryList: ArrayList<GroceryItem>) : Recycl
         holder.textView.text = currentItem.name
 
         holder.button.setOnClickListener {
+            deleteGroceryFromDatabase(currentItem.name)
+            addGroceryItemToIngredients(currentItem)
+            index = holder.adapterPosition
+            groceryList.removeAt(index)
+            notifyDataSetChanged()
+        }
+
+        holder.button2.setOnClickListener {
+            deleteGroceryFromDatabase(currentItem.name)
             index = holder.adapterPosition
             groceryList.removeAt(index)
             notifyDataSetChanged()
@@ -42,9 +59,36 @@ class GroceriesAdapter(private val groceryList: ArrayList<GroceryItem>) : Recycl
 //        notifyItemRangeChanged(index, groceryList.size)
     }
 
+    private fun deleteGroceryFromDatabase(item: String) {
+        val uid = FirebaseAuth.getInstance().uid?: ""
+        val query = FirebaseDatabase.getInstance().getReference("/groceries/$uid").orderByChild("name").equalTo(item.toString())
+
+        query?.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (snapshot in dataSnapshot.children) {
+                    snapshot.ref.removeValue()
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+
+            }
+        })
+
+    }
+
+    private fun addGroceryItemToIngredients(groceryItem: GroceryItem) {
+        val uid = FirebaseAuth.getInstance().uid?: ""
+        val ingredient = IngredientItem(groceryItem.name, groceryItem.quantity)
+
+        val newId = FirebaseDatabase.getInstance().getReference("/ingredients/$uid").push().key
+        FirebaseDatabase.getInstance().getReference("/ingredients/$uid/$newId/name").setValue(ingredient.name)
+        FirebaseDatabase.getInstance().getReference("/ingredients/$uid/$newId/quantity").setValue(ingredient.quantity)
+    }
+
 
     class GroceriesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textView: TextView = itemView.itemName
-        val button: Button = itemView.deleteButton
+        val button: Button = itemView.addToIngredientsButton
+        val button2: Button = itemView.deleteButton
     }
 }

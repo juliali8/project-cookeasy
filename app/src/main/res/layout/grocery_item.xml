@@ -17,6 +17,30 @@
             android:text="Grocery Item"
             android:textSize="20dp" />
 
+        <TextView
+            android:id="@+id/itemQuantityLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/itemName"
+            android:text="Quantity: "
+            android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/itemQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/itemName"
+            android:layout_toRightOf="@id/itemQuantityLabel"
+            android:text="0"
+            android:textSize="15dp" />
+
+        <Button
+            android:id="@+id/addToIngredientsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add"
+            android:layout_toLeftOf="@id/deleteButton"/>
+
         <Button
             android:id="@+id/deleteButton"
             android:layout_width="wrap_content"

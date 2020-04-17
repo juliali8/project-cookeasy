@@ -33,6 +33,7 @@ import kotlinx.android.synthetic.main.activity_ingredients.recyclerView
 import kotlinx.android.synthetic.main.grocery_item.*
 import kotlinx.android.synthetic.main.grocery_item.itemName
 import kotlinx.android.synthetic.main.ingredient_item.*
+import org.json.JSONObject
 
 
 class IngredientsActivity : AppCompatActivity() {
@@ -78,8 +79,9 @@ class IngredientsActivity : AppCompatActivity() {
 //                    Log.d("ingredient", it.child("ingredient").getValue().toString())
                     Log.d("ingredient", it.child("name").getValue(String::class.java).toString())
                     val ingredient = it.child("name").getValue(String::class.java).toString()
-                    if(ingredient != null) {
-                        val item = IngredientItem(ingredient.toString())
+                    val quantity = it.child("quantity").getValue(String::class.java).toString()
+                    if(ingredient != null && quantity != null) {
+                        val item = IngredientItem(ingredient, quantity)
                         ingredientList.add(item)
                     }
                 }
@@ -97,17 +99,6 @@ class IngredientsActivity : AppCompatActivity() {
 //        return list
     }
 
-    fun deleteItemFromView(view: View) {
-        val index = ingredientList.indexOf(IngredientItem(itemName.text.toString()))
-        recyclerView.adapter = IngredientsAdapter(ingredientList)
-        ingredientList.remove(IngredientItem(itemName.text.toString()))
-        val adapter = recyclerView.adapter as IngredientsAdapter
-        adapter.removeItem()
-        recyclerView.layoutManager = LinearLayoutManager(this@IngredientsActivity)
-        recyclerView.setHasFixedSize(true)
-        Log.d("delete", "button clicked!")
-    }
-
     fun dialogView(view: View) {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.enter_ingredient, null)
         val builder = AlertDialog.Builder(this)
@@ -117,23 +108,33 @@ class IngredientsActivity : AppCompatActivity() {
 
         alertDialog.submitItem.setOnClickListener {
             val ingredientInput = dialogView.name.text.toString()
-            if(ingredientInput != ""){
-                writeNewIngredient(ingredientInput)
-                val item = IngredientItem(ingredientInput)
+            val quantityInput = dialogView.quantity.text.toString()
+            if(ingredientInput != "" && quantityInput != ""){
+//                writeNewIngredient(ingredientInput)
+                val item = IngredientItem(ingredientInput, quantityInput)
+                writeNewIngredient(item)
                 ingredientList.add(item)
                 recyclerView.adapter = IngredientsAdapter(ingredientList)
                 recyclerView.layoutManager = LinearLayoutManager(this@IngredientsActivity)
                 recyclerView.setHasFixedSize(true)
                 alertDialog.dismiss()
             }
+            else if(ingredientInput == "") {
+                errorMessage.text = "Please enter an ingredient."
+            }
+//            else if(quantityInput == "") {
+//                errorMessage.text = "Please enter a quantity."
+//            }
         }
     }
 
-    private fun writeNewIngredient(ingredientName: String) {
+    private fun writeNewIngredient(ingredient: IngredientItem) {
         val uid = FirebaseAuth.getInstance().uid?: ""
-        val ingredient = IngredientItem(ingredientName)
+//        val ingredient = IngredientItem(ingredientName)
 //        FirebaseDatabase.getInstance().getReference("/users/$uid").setValue(user)
-        FirebaseDatabase.getInstance().getReference("/ingredients/$uid").push().setValue(ingredient)
+        val newId = FirebaseDatabase.getInstance().getReference("/ingredients/$uid").push().key
+        FirebaseDatabase.getInstance().getReference("/ingredients/$uid/$newId/name").setValue(ingredient.name)
+        FirebaseDatabase.getInstance().getReference("/ingredients/$uid/$newId/quantity").setValue(ingredient.quantity)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
