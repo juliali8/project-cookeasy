@@ -30,6 +30,10 @@ import com.example.cookeasy.adapters.GroceriesAdapter
 import com.example.cookeasy.objects.GroceryItem
 import kotlinx.android.synthetic.main.activity_groceries.*
 import kotlinx.android.synthetic.main.activity_ingredients.recyclerView
+import kotlinx.android.synthetic.main.enter_grocery.*
+import kotlinx.android.synthetic.main.enter_ingredient.errorMessage
+import kotlinx.android.synthetic.main.enter_ingredient.exit
+import kotlinx.android.synthetic.main.enter_ingredient.submitItem
 import kotlinx.android.synthetic.main.grocery_item.*
 import kotlinx.android.synthetic.main.grocery_item.itemName
 import kotlinx.android.synthetic.main.ingredient_item.*
@@ -126,7 +130,12 @@ class IngredientsActivity : AppCompatActivity() {
 //                errorMessage.text = "Please enter a quantity."
 //            }
         }
+
+        alertDialog.exit.setOnClickListener {
+            alertDialog.dismiss()
+        }
     }
+
 
     private fun writeNewIngredient(ingredient: IngredientItem) {
         val uid = FirebaseAuth.getInstance().uid?: ""

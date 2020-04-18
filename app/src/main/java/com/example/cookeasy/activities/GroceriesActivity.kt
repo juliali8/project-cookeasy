@@ -113,6 +113,10 @@ class GroceriesActivity : AppCompatActivity() {
                 alertDialog.dismiss()
             }
         }
+
+        alertDialog.exit.setOnClickListener {
+            alertDialog.dismiss()
+        }
     }
 
     private fun writeNewGrocery(groceryItem: GroceryItem) {

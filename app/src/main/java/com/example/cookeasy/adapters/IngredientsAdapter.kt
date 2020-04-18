@@ -1,5 +1,6 @@
 package com.example.cookeasy.adapters
 
+import android.app.Activity
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cookeasy.R
+import com.example.cookeasy.activities.IngredientsActivity
 import com.example.cookeasy.objects.IngredientItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -16,13 +18,17 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.ingredient_item.view.*
+import android.content.Context.LAYOUT_INFLATER_SERVICE
+import androidx.core.content.ContextCompat.getSystemService
+
+
 
 class IngredientsAdapter(private val ingredientList: ArrayList<IngredientItem>) : RecyclerView.Adapter<IngredientsAdapter.IngredientViewHolder>() {
 
     private var index: Int = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IngredientViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.ingredient_item, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(com.example.cookeasy.R.layout.ingredient_item, parent, false)
         return IngredientViewHolder(itemView)
     }
 
@@ -39,6 +45,12 @@ class IngredientsAdapter(private val ingredientList: ArrayList<IngredientItem>) 
             ingredientList.removeAt(index)
             notifyItemRemoved(index)
         }
+
+//        holder.button2.setOnClickListener {
+//            val dialogView = LayoutInflater.from((IngredientsActivity)context).inflate(com.example.cookeasy.R.layout.enter_ingredient, null)
+//            editItemInDatabase(currentItem.name)
+//            holder.quantityTextView.text =
+//        }
     }
 
     fun removeItem() {
@@ -63,9 +75,27 @@ class IngredientsAdapter(private val ingredientList: ArrayList<IngredientItem>) 
 
     }
 
+    private fun editItemInDatabase(item: String) {
+        val uid = FirebaseAuth.getInstance().uid?: ""
+        val query = FirebaseDatabase.getInstance().getReference("/ingredients/$uid").orderByChild("name").equalTo(item.toString())
+
+        query?.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (snapshot in dataSnapshot.children) {
+                    snapshot.ref.child("quantity").setValue("")
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+
+            }
+        })
+
+    }
+
     class IngredientViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textView: TextView = itemView.itemName
         val quantityTextView = itemView.itemQuantity
         val button: Button = itemView.deleteButton
+//        val button2: Button = itemView.editButton
     }
 }

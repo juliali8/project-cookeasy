@@ -15,6 +15,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.getValue
 import kotlinx.android.synthetic.main.grocery_item.view.*
 import kotlinx.android.synthetic.main.ingredient_item.view.*
 import kotlinx.android.synthetic.main.ingredient_item.view.deleteButton
@@ -83,6 +84,19 @@ class GroceriesAdapter(private val groceryList: ArrayList<GroceryItem>) : Recycl
         val newId = FirebaseDatabase.getInstance().getReference("/ingredients/$uid").push().key
         FirebaseDatabase.getInstance().getReference("/ingredients/$uid/$newId/name").setValue(ingredient.name)
         FirebaseDatabase.getInstance().getReference("/ingredients/$uid/$newId/quantity").setValue(ingredient.quantity)
+
+//        val query = FirebaseDatabase.getInstance().getReference("/ingredients/$uid").orderByChild("name").equalTo(groceryItem.name)
+//        query?.addListenerForSingleValueEvent(object : ValueEventListener {
+//            override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                for (snapshot in dataSnapshot.children) {
+//                    snapshot.ref.removeValue()
+//                    snapshot.ref.child("quantity").value
+//                }
+//            }
+//            override fun onCancelled(databaseError: DatabaseError) {
+//
+//            }
+//        })
     }
 
 
