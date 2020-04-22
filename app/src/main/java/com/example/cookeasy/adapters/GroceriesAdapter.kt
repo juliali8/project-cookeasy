@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.View
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +17,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
+import kotlinx.android.synthetic.main.activity_groceries.view.*
 import kotlinx.android.synthetic.main.grocery_item.view.*
 import kotlinx.android.synthetic.main.ingredient_item.view.*
 import kotlinx.android.synthetic.main.ingredient_item.view.deleteButton
@@ -24,6 +26,7 @@ import kotlinx.android.synthetic.main.ingredient_item.view.itemName
 class GroceriesAdapter(private val groceryList: ArrayList<GroceryItem>) : RecyclerView.Adapter<GroceriesAdapter.GroceriesViewHolder>() {
 
     private var index: Int = 0
+    private var checkedList = ArrayList<GroceryItem>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroceriesViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.grocery_item, parent, false)
@@ -51,7 +54,33 @@ class GroceriesAdapter(private val groceryList: ArrayList<GroceryItem>) : Recycl
             notifyDataSetChanged()
         }
 
+        holder.checkbox.setOnClickListener {
+            if(holder.checkbox.isChecked) {
+                index = holder.adapterPosition
+                checkedList.add(groceryList[index])
+            }
+        }
+
+//        holder.moveItemsBtn.setOnClickListener {
+//            for(item in checkedList) {
+//                deleteGroceryFromDatabase(item.name)
+//                addGroceryItemToIngredients(item)
+//                groceryList.remove(item)
+//                notifyDataSetChanged()
+//            }
+//        }
+
     }
+
+    fun moveItemsToIngredients() {
+        for(item in checkedList) {
+            deleteGroceryFromDatabase(item.name)
+            addGroceryItemToIngredients(item)
+            groceryList.remove(item)
+            notifyDataSetChanged()
+        }
+    }
+
 
     fun removeItem(position: Int) {
         groceryList.removeAt(index)
@@ -104,5 +133,6 @@ class GroceriesAdapter(private val groceryList: ArrayList<GroceryItem>) : Recycl
         val textView: TextView = itemView.itemName
         val button: Button = itemView.addToIngredientsButton
         val button2: Button = itemView.deleteButton
+        val checkbox: CheckBox = itemView.checkbox
     }
 }

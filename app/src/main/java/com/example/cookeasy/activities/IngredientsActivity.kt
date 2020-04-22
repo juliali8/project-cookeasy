@@ -103,7 +103,7 @@ class IngredientsActivity : AppCompatActivity() {
 //        return list
     }
 
-    fun dialogView(view: View) {
+    fun ingredientDialogView(view: View) {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.enter_ingredient, null)
         val builder = AlertDialog.Builder(this)
             .setView(dialogView)

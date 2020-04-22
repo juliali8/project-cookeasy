@@ -51,7 +51,6 @@ class GroceriesActivity : AppCompatActivity() {
 
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
 
-
         generateGroceryList(250)
     }
 
@@ -91,7 +90,8 @@ class GroceriesActivity : AppCompatActivity() {
     }
 
 
-    fun dialogView(view: View) {
+
+    fun groceryDialogView(view: View) {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.enter_grocery, null)
         val builder = AlertDialog.Builder(this)
             .setView(dialogView)
@@ -117,6 +117,11 @@ class GroceriesActivity : AppCompatActivity() {
         alertDialog.exit.setOnClickListener {
             alertDialog.dismiss()
         }
+    }
+
+    fun moveItemsToIngredients(view: View) {
+        val adapter = recyclerView.adapter as GroceriesAdapter
+        adapter.moveItemsToIngredients()
     }
 
     private fun writeNewGrocery(groceryItem: GroceryItem) {
