@@ -1,6 +1,8 @@
 package com.example.cookeasy.adapters
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -20,10 +22,12 @@ import com.google.firebase.database.ValueEventListener
 import kotlinx.android.synthetic.main.ingredient_item.view.*
 import android.content.Context.LAYOUT_INFLATER_SERVICE
 import androidx.core.content.ContextCompat.getSystemService
+import com.example.cookeasy.objects.GroceryItem
+import kotlinx.android.synthetic.main.update_ingredient.*
+import kotlinx.android.synthetic.main.update_ingredient.view.*
 
 
-
-class IngredientsAdapter(private val ingredientList: ArrayList<IngredientItem>) : RecyclerView.Adapter<IngredientsAdapter.IngredientViewHolder>() {
+class IngredientsAdapter(private val context: Context, private val ingredientList: ArrayList<IngredientItem>) : RecyclerView.Adapter<IngredientsAdapter.IngredientViewHolder>() {
 
     private var index: Int = 0
 
@@ -46,11 +50,35 @@ class IngredientsAdapter(private val ingredientList: ArrayList<IngredientItem>) 
             notifyItemRemoved(index)
         }
 
-//        holder.button2.setOnClickListener {
-//            val dialogView = LayoutInflater.from((IngredientsActivity)context).inflate(com.example.cookeasy.R.layout.enter_ingredient, null)
-//            editItemInDatabase(currentItem.name)
-//            holder.quantityTextView.text =
-//        }
+        holder.editButton.setOnClickListener {
+            index = holder.adapterPosition
+            val dialogView = LayoutInflater.from(context).inflate(R.layout.update_ingredient, null)
+            val builder = AlertDialog.Builder(context)
+                .setView(dialogView)
+                .setTitle("Edit the Ingredient Item")
+            val oldIngredientInput = currentItem.name
+            dialogView.name.setText(currentItem.name)
+            dialogView.quantity.setText(currentItem.quantity)
+            val alertDialog = builder.show()
+
+            alertDialog.updateItem.setOnClickListener {
+                val ingredientInput = dialogView.name.text.toString()
+                val quantityInput = dialogView.quantity.text.toString()
+                if (ingredientInput != "" && quantityInput != "") {
+                    val item = IngredientItem(ingredientInput, quantityInput)
+                    ingredientList.set(index, item)
+                    updateIngredientItem(oldIngredientInput, item)
+                    notifyDataSetChanged()
+                    alertDialog.dismiss()
+                }
+            }
+
+            alertDialog.exit.setOnClickListener {
+                alertDialog.dismiss()
+            }
+        }
+
+
     }
 
     fun removeItem() {
@@ -75,27 +103,28 @@ class IngredientsAdapter(private val ingredientList: ArrayList<IngredientItem>) 
 
     }
 
-    private fun editItemInDatabase(item: String) {
+    private fun updateIngredientItem(oldInput: String, ingredientItem: IngredientItem) {
+
         val uid = FirebaseAuth.getInstance().uid?: ""
-        val query = FirebaseDatabase.getInstance().getReference("/ingredients/$uid").orderByChild("name").equalTo(item.toString())
+        val query = FirebaseDatabase.getInstance().getReference("/ingredients/$uid").orderByChild("name").equalTo(oldInput)
 
         query?.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (snapshot in dataSnapshot.children) {
-                    snapshot.ref.child("quantity").setValue("")
+                    snapshot.ref.child("name").setValue(ingredientItem.name)
+                    snapshot.ref.child("quantity").setValue(ingredientItem.quantity)
                 }
             }
             override fun onCancelled(databaseError: DatabaseError) {
 
             }
         })
-
     }
 
     class IngredientViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textView: TextView = itemView.itemName
         val quantityTextView: TextView = itemView.itemQuantity
         val button: Button = itemView.deleteButton
-//        val button2: Button = itemView.editButton
+        val editButton: Button = itemView.editIngredientItem
     }
 }

@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.activity_ingredients.*
 import kotlinx.android.synthetic.main.enter_ingredient.*
 import kotlinx.android.synthetic.main.enter_ingredient.view.*
 import android.R.menu
+import android.content.Context
 import android.content.Intent
 import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
@@ -53,6 +54,8 @@ class IngredientsActivity : AppCompatActivity() {
 
     private var ingredientList = ArrayList<IngredientItem>()
 
+    lateinit var context: Context
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +67,8 @@ class IngredientsActivity : AppCompatActivity() {
 
 
         generateIngredientList(250)
+
+        context = this
     }
 
 
@@ -90,7 +95,7 @@ class IngredientsActivity : AppCompatActivity() {
                     }
                 }
 
-                recyclerView.adapter = IngredientsAdapter(ingredientList)
+                recyclerView.adapter = IngredientsAdapter(context, ingredientList)
                 recyclerView.layoutManager = LinearLayoutManager(this@IngredientsActivity)
                 recyclerView.setHasFixedSize(true)
             }
@@ -118,7 +123,7 @@ class IngredientsActivity : AppCompatActivity() {
                 val item = IngredientItem(ingredientInput, quantityInput)
                 writeNewIngredient(item)
                 ingredientList.add(item)
-                recyclerView.adapter = IngredientsAdapter(ingredientList)
+                recyclerView.adapter = IngredientsAdapter(context, ingredientList)
                 recyclerView.layoutManager = LinearLayoutManager(this@IngredientsActivity)
                 recyclerView.setHasFixedSize(true)
                 alertDialog.dismiss()

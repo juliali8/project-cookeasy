@@ -15,6 +15,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import android.R.menu
+import android.content.Context
 import android.content.Intent
 import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
@@ -42,6 +43,8 @@ class GroceriesActivity : AppCompatActivity() {
 
     private var groceryList = ArrayList<GroceryItem>()
 
+    lateinit var context: Context
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +55,8 @@ class GroceriesActivity : AppCompatActivity() {
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
 
         generateGroceryList(250)
+
+        context = this
     }
 
 
@@ -76,7 +81,7 @@ class GroceriesActivity : AppCompatActivity() {
                     }
                 }
 
-                recyclerView.adapter = GroceriesAdapter(groceryList)
+                recyclerView.adapter = GroceriesAdapter(context, groceryList)
                 recyclerView.layoutManager = LinearLayoutManager(this@GroceriesActivity)
                 recyclerView.setHasFixedSize(true)
             }
