@@ -34,7 +34,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:onClick="moveItemsToIngredients"
-        android:text="Move to Ingredients" />
+        android:text="Move Checked Items to Ingredients" />
 
     <Button
         android:id="@+id/addItemBtn"

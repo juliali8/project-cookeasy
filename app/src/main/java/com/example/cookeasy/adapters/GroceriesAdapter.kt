@@ -141,7 +141,6 @@ class GroceriesAdapter(private val context: Context, private val groceryList: Ar
     }
 
     private fun updateGroceryItem(oldInput: String, groceryItem: GroceryItem) {
-        Log.d("in updateGroceryItem", "hello")
 
         val uid = FirebaseAuth.getInstance().uid?: ""
         val query = FirebaseDatabase.getInstance().getReference("/groceries/$uid").orderByChild("name").equalTo(oldInput)
@@ -162,10 +161,29 @@ class GroceriesAdapter(private val context: Context, private val groceryList: Ar
     private fun addGroceryItemToIngredients(groceryItem: GroceryItem) {
         val uid = FirebaseAuth.getInstance().uid?: ""
         val ingredient = IngredientItem(groceryItem.name, groceryItem.quantity)
+        val groceryQuantity = groceryItem.quantity.toInt()
 
-        val newId = FirebaseDatabase.getInstance().getReference("/ingredients/$uid").push().key
-        FirebaseDatabase.getInstance().getReference("/ingredients/$uid/$newId/name").setValue(ingredient.name)
-        FirebaseDatabase.getInstance().getReference("/ingredients/$uid/$newId/quantity").setValue(ingredient.quantity)
+        val query = FirebaseDatabase.getInstance().getReference("/ingredients/$uid").orderByChild("name").equalTo(groceryItem.name)
+
+        query?.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (snapshot in dataSnapshot.children) {
+                    val ingredientQuantity = snapshot.child("quantity").getValue(String::class.java).toString().toInt()
+                    val totalQuantity = (groceryQuantity + ingredientQuantity).toString()
+                    snapshot.ref.child("quantity").setValue(totalQuantity)
+                }
+
+                if(!dataSnapshot.exists()) {
+                    val newId = FirebaseDatabase.getInstance().getReference("/ingredients/$uid").push().key
+                    FirebaseDatabase.getInstance().getReference("/ingredients/$uid/$newId/name").setValue(ingredient.name)
+                    FirebaseDatabase.getInstance().getReference("/ingredients/$uid/$newId/quantity").setValue(ingredient.quantity)
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+
+            }
+        })
+
     }
 
 

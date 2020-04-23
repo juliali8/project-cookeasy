@@ -68,11 +68,7 @@ class GroceriesActivity : AppCompatActivity() {
         val ref = FirebaseDatabase.getInstance().getReference("/groceries/$uid")
         ref.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
-
-
                 p0.children.forEach {
-                    Log.d("in foreach", "hi")
-                    Log.d("grocery", it.child("name").getValue(String::class.java).toString())
                     val grocery = it.child("name").getValue(String::class.java).toString()
                     val quantity = it.child("quantity").getValue(String::class.java).toString()
                     if(grocery != null) {
