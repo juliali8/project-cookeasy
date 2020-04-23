@@ -2,13 +2,11 @@ package com.example.cookeasy.Network
 
 import androidx.lifecycle.MutableLiveData
 import com.example.cookeasy.Data.DataRecipe
-import com.google.android.gms.common.api.Response
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
-import retrofit2.Response
 
 class RecipeRepository {
     //get the instance of retrofit
@@ -18,7 +16,7 @@ class RecipeRepository {
     fun getRecipeBySearch(resBody : MutableLiveData<DataRecipe>, param:String) {
         //set the coroutine on a background thread
         CoroutineScope(Dispatchers.IO).launch {
-            var response: Response<DataRecipe> = service.getRecipeBySearchQuery(param)
+            var response: retrofit2.Response<DataRecipe> = service.getRecipeBySearchQuery(param)
 
             //when the coroutine finishes
             withContext(Dispatchers.Main){

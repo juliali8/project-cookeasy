@@ -65,20 +65,13 @@ class RecipeFragment: Fragment() {
                 val searchAdapter = RecipeAdapter(recipeList,activity)
                 recyclerView.adapter = searchAdapter
                 recyclerView.layoutManager = LinearLayoutManager(this.context)
-                //observe the allEvents LiveData
-//                viewModel.recipeList.observe(viewLifecycleOwner, Observer { recipes->
-//                    // Update the cached copy of the words in the adapter.
-//                    recipeList.clear()
-//                    recipeList.addAll(recipes.data)
-//                    adapter.notifyDataSetChanged()
-//                })
-                viewModel.recipeList.observe(this, Observer { tracks ->
+              //  observe the allEvents LiveData
+                viewModel.recipeList.observe(viewLifecycleOwner, Observer { recipes->
                     // Update the cached copy of the words in the adapter.
                     recipeList.clear()
-                    recipeList.addAll(tracks.data)
+                    recipeList.addAll(recipes.data)
                     adapter.notifyDataSetChanged()
                 })
-
                 //your code here
                 val input: String = searchBox.text.toString()
                 viewModel.getRecipe(input)
