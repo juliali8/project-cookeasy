@@ -13,6 +13,11 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/searchMenuItem"
+        android:title="Search Recipes"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/favMenuItem"
         android:title="Fav Recipes"
         app:showAsAction="never" />

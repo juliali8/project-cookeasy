@@ -27,6 +27,7 @@ import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.view.*
 import android.widget.Toast
+import com.example.cookeasy.SearchActivity
 import com.example.cookeasy.adapters.GroceriesAdapter
 import com.example.cookeasy.objects.GroceryItem
 import kotlinx.android.synthetic.main.activity_groceries.*
@@ -173,6 +174,11 @@ class IngredientsActivity : AppCompatActivity() {
                 startActivity(intent)
                 return true
             }
+            R.id.searchMenuItem ->{
+                val intent = Intent(this, SearchActivity::class.java)
+                startActivity(intent)
+                return true
+            }
             R.id.logoutMenuItem ->{
                 FirebaseAuth.getInstance().signOut()
                 val intent = Intent(this, LoginActivity::class.java)
@@ -183,3 +189,4 @@ class IngredientsActivity : AppCompatActivity() {
         }
     }
 }
+
