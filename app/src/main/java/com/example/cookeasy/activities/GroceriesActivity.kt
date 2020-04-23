@@ -170,6 +170,11 @@ class GroceriesActivity : AppCompatActivity() {
                 startActivity(intent)
                 return true
             }
+            R.id.favMenuItem -> {
+                val intent = Intent(this, FavActivity::class.java)
+                startActivity(intent)
+                return true
+            }
             R.id.groceryMenuItem ->{
                 Toast.makeText(applicationContext, "grocery item clicked", Toast.LENGTH_LONG).show()
                 return true
