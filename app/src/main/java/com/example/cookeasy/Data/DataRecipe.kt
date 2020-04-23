@@ -1,7 +1,7 @@
 package com.example.cookeasy.Data
 
 data class DataRecipe(
-    val data:List<Recipe>,
-    val total:Int,
+    val results:List<Recipe>,
+    val totalResult:Int,
     val next: String
 )
