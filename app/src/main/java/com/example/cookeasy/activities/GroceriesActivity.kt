@@ -15,6 +15,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import android.R.menu
+import android.content.Context
 import android.content.Intent
 import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
@@ -42,6 +43,8 @@ class GroceriesActivity : AppCompatActivity() {
 
     private var groceryList = ArrayList<GroceryItem>()
 
+    lateinit var context: Context
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,8 +54,9 @@ class GroceriesActivity : AppCompatActivity() {
 
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
 
-
         generateGroceryList(250)
+
+        context = this
     }
 
 
@@ -64,19 +68,16 @@ class GroceriesActivity : AppCompatActivity() {
         val ref = FirebaseDatabase.getInstance().getReference("/groceries/$uid")
         ref.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
-
-
                 p0.children.forEach {
-                    Log.d("in foreach", "hi")
-                    Log.d("grocery", it.child("name").getValue(String::class.java).toString())
                     val grocery = it.child("name").getValue(String::class.java).toString()
+                    val quantity = it.child("quantity").getValue(String::class.java).toString()
                     if(grocery != null) {
-                        val item = GroceryItem(grocery.toString())
+                        val item = GroceryItem(grocery, quantity)
                         groceryList.add(item)
                     }
                 }
 
-                recyclerView.adapter = GroceriesAdapter(groceryList)
+                recyclerView.adapter = GroceriesAdapter(context, groceryList)
                 recyclerView.layoutManager = LinearLayoutManager(this@GroceriesActivity)
                 recyclerView.setHasFixedSize(true)
             }
@@ -89,22 +90,9 @@ class GroceriesActivity : AppCompatActivity() {
 //        return list
     }
 
-    fun deleteItemFromView(view: View) {
-        val index = groceryList.indexOf(GroceryItem(itemName.text.toString()))
-//        recyclerView.adapter = GroceriesAdapter(groceryList)
-//        recyclerView.layoutManager = LinearLayoutManager(this@GroceriesActivity)
-//        recyclerView.setHasFixedSize(true)
-        groceryList.removeAt(index)
-        val adapter = recyclerView.adapter as GroceriesAdapter
-        adapter.removeItem(index)
-//        recyclerView.adapter = GroceriesAdapter(groceryList)
-//        recyclerView.layoutManager = LinearLayoutManager(this@GroceriesActivity)
-//        recyclerView.setHasFixedSize(true)
-        Log.d("delete", "button clicked!")
-        deleteGroceryFromDatabase(itemName.text.toString())
-    }
 
-    fun dialogView(view: View) {
+
+    fun groceryDialogView(view: View) {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.enter_grocery, null)
         val builder = AlertDialog.Builder(this)
             .setView(dialogView)
@@ -113,9 +101,10 @@ class GroceriesActivity : AppCompatActivity() {
 
         alertDialog.submitItem.setOnClickListener {
             val groceryInput = dialogView.name.text.toString()
-            if(groceryInput != ""){
-                writeNewGrocery(groceryInput)
-                val item = GroceryItem(groceryInput)
+            val quantityInput = dialogView.quantity.text.toString()
+            if(groceryInput != "" && quantityInput != ""){
+                val item = GroceryItem(groceryInput, quantityInput)
+                writeNewGrocery(item)
                 groceryList.add(item)
                 val adapter = recyclerView.adapter as GroceriesAdapter
                 adapter.notifyDataSetChanged()
@@ -125,36 +114,25 @@ class GroceriesActivity : AppCompatActivity() {
                 alertDialog.dismiss()
             }
         }
+
+        alertDialog.exit.setOnClickListener {
+            alertDialog.dismiss()
+        }
     }
 
-    private fun writeNewGrocery(groceryName: String) {
+    fun moveItemsToIngredients(view: View) {
+        val adapter = recyclerView.adapter as GroceriesAdapter
+        adapter.moveItemsToIngredients()
+    }
+
+    private fun writeNewGrocery(groceryItem: GroceryItem) {
         val uid = FirebaseAuth.getInstance().uid?: ""
-        val grocery = GroceryItem(groceryName)
 //        FirebaseDatabase.getInstance().getReference("/users/$uid").setValue(user)
-        FirebaseDatabase.getInstance().getReference("/groceries/$uid").push().setValue(grocery)
+        val newId = FirebaseDatabase.getInstance().getReference("/groceries/$uid").push().key
+        FirebaseDatabase.getInstance().getReference("/groceries/$uid/$newId/name").setValue(groceryItem.name)
+        FirebaseDatabase.getInstance().getReference("/groceries/$uid/$newId/quantity").setValue(groceryItem.quantity)
     }
 
-    private fun deleteGroceryFromDatabase(groceryName: String) {
-        val uid = FirebaseAuth.getInstance().uid?: ""
-//        FirebaseDatabase.getInstance().getReference("/groceries/$uid").child("name").removeValue()
-
-//        val grocery = GroceryItem(groceryName)
-//        val grocery = it.child("name").getValue(String::class.java).toString()
-
-        val query = FirebaseDatabase.getInstance().getReference("/groceries/$uid").orderByChild("name").equalTo(groceryName)
-
-        query.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (snapshot in dataSnapshot.children) {
-                    snapshot.ref.removeValue()
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-
-            }
-        })
-    }
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

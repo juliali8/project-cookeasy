@@ -8,7 +8,7 @@
 
     <EditText
         android:id="@+id/name"
-        android:hint="Grocery Name"
+        android:hint="Ingredient Name"
         android:inputType="text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,11 +35,11 @@
         android:orientation="horizontal"
         android:gravity="center">
         <Button
-            android:id="@+id/submitItem"
-            android:text="Add"
+            android:id="@+id/updateItem"
+            android:text="Update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-        />
+            />
     </RelativeLayout>
 
     <Button
