@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cookeasy.R
+import com.example.cookeasy.SearchActivity
 import com.example.cookeasy.adapters.FavAdapter
 import com.example.cookeasy.adapters.GroceriesAdapter
 import com.example.cookeasy.adapters.IngredientsAdapter
@@ -146,6 +147,11 @@ class FavActivity : AppCompatActivity(){
             }
             R.id.groceryMenuItem ->{
                 val intent = Intent(this, GroceriesActivity::class.java)
+                startActivity(intent)
+                return true
+            }
+            R.id.searchMenuItem ->{
+                val intent = Intent(this, SearchActivity::class.java)
                 startActivity(intent)
                 return true
             }

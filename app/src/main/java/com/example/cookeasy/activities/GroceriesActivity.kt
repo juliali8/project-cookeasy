@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.view.*
 import android.widget.Toast
+import com.example.cookeasy.SearchActivity
 import com.example.cookeasy.adapters.GroceriesAdapter
 import com.example.cookeasy.objects.GroceryItem
 import kotlinx.android.synthetic.main.activity_groceries.*
@@ -155,6 +156,11 @@ class GroceriesActivity : AppCompatActivity() {
             }
             R.id.groceryMenuItem ->{
                 Toast.makeText(applicationContext, "grocery item clicked", Toast.LENGTH_LONG).show()
+                return true
+            }
+            R.id.searchMenuItem ->{
+                val intent = Intent(this, SearchActivity::class.java)
+                startActivity(intent)
                 return true
             }
             R.id.logoutMenuItem ->{
