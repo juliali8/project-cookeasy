@@ -27,6 +27,7 @@ class GroceriesAdapter(private val groceryList: ArrayList<GroceryItem>) : Recycl
 
     private var index: Int = 0
     private var checkedList = ArrayList<GroceryItem>()
+    private var moveItems: Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroceriesViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.grocery_item, parent, false)
@@ -38,16 +39,22 @@ class GroceriesAdapter(private val groceryList: ArrayList<GroceryItem>) : Recycl
     override fun onBindViewHolder(holder: GroceriesViewHolder, position: Int) {
         val currentItem = groceryList[position]
         holder.textView.text = currentItem.name
+        holder.quantityTextView.text = currentItem.quantity.toString()
 
-        holder.button.setOnClickListener {
-            deleteGroceryFromDatabase(currentItem.name)
-            addGroceryItemToIngredients(currentItem)
-            index = holder.adapterPosition
-            groceryList.removeAt(index)
-            notifyDataSetChanged()
-        }
+//        holder.button.setOnClickListener {
+//            deleteGroceryFromDatabase(currentItem.name)
+//            addGroceryItemToIngredients(currentItem)
+//            index = holder.adapterPosition
+//            groceryList.removeAt(index)
+//            notifyDataSetChanged()
+//        }
 
         holder.button2.setOnClickListener {
+            if(holder.checkbox.isChecked) {
+                holder.checkbox.isChecked = false
+                index = holder.adapterPosition
+                checkedList.remove(groceryList[index])
+            }
             deleteGroceryFromDatabase(currentItem.name)
             index = holder.adapterPosition
             groceryList.removeAt(index)
@@ -58,6 +65,10 @@ class GroceriesAdapter(private val groceryList: ArrayList<GroceryItem>) : Recycl
             if(holder.checkbox.isChecked) {
                 index = holder.adapterPosition
                 checkedList.add(groceryList[index])
+            }
+            else {
+                index = holder.adapterPosition
+                checkedList.remove(groceryList[index])
             }
         }
 
@@ -70,9 +81,14 @@ class GroceriesAdapter(private val groceryList: ArrayList<GroceryItem>) : Recycl
 //            }
 //        }
 
+        if(moveItems == true) {
+            holder.checkbox.isChecked = false
+            moveItems == false
+        }
     }
 
     fun moveItemsToIngredients() {
+        moveItems = true
         for(item in checkedList) {
             deleteGroceryFromDatabase(item.name)
             addGroceryItemToIngredients(item)
@@ -131,7 +147,8 @@ class GroceriesAdapter(private val groceryList: ArrayList<GroceryItem>) : Recycl
 
     class GroceriesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textView: TextView = itemView.itemName
-        val button: Button = itemView.addToIngredientsButton
+        val quantityTextView: TextView = itemView.groceryItemQuantity
+//        val button: Button = itemView.addToIngredientsButton
         val button2: Button = itemView.deleteButton
         val checkbox: CheckBox = itemView.checkbox
     }

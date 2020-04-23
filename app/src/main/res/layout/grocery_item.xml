@@ -31,7 +31,7 @@
             android:textSize="15dp" />
 
         <TextView
-            android:id="@+id/itemQuantity"
+            android:id="@+id/groceryItemQuantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/itemName"

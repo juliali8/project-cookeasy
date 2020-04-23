@@ -94,7 +94,7 @@ class IngredientsAdapter(private val ingredientList: ArrayList<IngredientItem>) 
 
     class IngredientViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textView: TextView = itemView.itemName
-        val quantityTextView = itemView.itemQuantity
+        val quantityTextView: TextView = itemView.itemQuantity
         val button: Button = itemView.deleteButton
 //        val button2: Button = itemView.editButton
     }
