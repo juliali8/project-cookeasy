@@ -17,10 +17,7 @@ import com.example.cookeasy.SearchActivity
 import com.example.cookeasy.adapters.FavAdapter
 import com.example.cookeasy.adapters.GroceriesAdapter
 import com.example.cookeasy.adapters.IngredientsAdapter
-import com.example.cookeasy.objects.GroceryItem
-import com.example.cookeasy.objects.IngredientItem
-import com.example.cookeasy.objects.RecipeItem
-import com.example.cookeasy.objects.User
+import com.example.cookeasy.objects.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
@@ -42,7 +39,7 @@ class FavActivity : AppCompatActivity(){
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
     private lateinit var viewManager: RecyclerView.LayoutManager
 
-    private var favList = ArrayList<RecipeItem>()
+    private var favList = ArrayList<FavoriteItem>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +50,7 @@ class FavActivity : AppCompatActivity(){
 
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
 
+        generateRecipeList(250)
 
     }
 
@@ -61,7 +59,7 @@ class FavActivity : AppCompatActivity(){
 
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
 
-        val ref = FirebaseDatabase.getInstance().getReference("/recipes/$uid")
+        val ref = FirebaseDatabase.getInstance().getReference("/favorites/$uid")
         ref.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(p0: DataSnapshot) {
 
@@ -71,7 +69,7 @@ class FavActivity : AppCompatActivity(){
                     Log.d("recipe", it.child("name").getValue(String::class.java).toString())
                     val recipe = it.child("name").getValue(String::class.java).toString()
                     if(recipe != null) {
-                        val item = RecipeItem(recipe.toString())
+                        val item = FavoriteItem(recipe.toString())
                         favList.add(item)
                     }
                 }
@@ -90,9 +88,9 @@ class FavActivity : AppCompatActivity(){
     }
 
     fun deleteItemFromView(view: View) {
-        val index = favList.indexOf(RecipeItem(itemName.text.toString()))
+        val index = favList.indexOf(FavoriteItem(itemName.text.toString()))
         recyclerView.adapter = FavAdapter(favList)
-        favList.remove(RecipeItem(itemName.text.toString()))
+        favList.remove(FavoriteItem(itemName.text.toString()))
         val adapter = recyclerView.adapter as FavAdapter
         adapter.removeItem()
         recyclerView.layoutManager = LinearLayoutManager(this@FavActivity)

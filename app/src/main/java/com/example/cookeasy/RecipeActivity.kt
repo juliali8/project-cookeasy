@@ -14,10 +14,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.cookeasy.Data.Ingredient
 import com.example.cookeasy.Data.Recipe
 import com.example.cookeasy.ViewModel.RecipeViewModel
+import com.example.cookeasy.activities.FavActivity
 import com.example.cookeasy.activities.MainActivity
+import com.example.cookeasy.adapters.FavAdapter
+import com.example.cookeasy.objects.FavoriteItem
+import com.example.cookeasy.objects.GroceryItem
 import com.example.cookeasyapi.ViewModel.RecipeIngredientViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import kotlinx.android.synthetic.main.activity_favs.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_recipe_info.*
+import kotlinx.android.synthetic.main.activity_recipe_info.recyclerView
 
 class RecipeActivity: AppCompatActivity() {
     var ingredientList: ArrayList<Ingredient> = ArrayList()
@@ -30,6 +38,7 @@ class RecipeActivity: AppCompatActivity() {
     public lateinit var backButton: Button
     public lateinit var addToFavoriteButton: Button
     lateinit var viewModel: RecipeIngredientViewModel
+    private var favoriteList = ArrayList<FavoriteItem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +53,7 @@ class RecipeActivity: AppCompatActivity() {
         //Get the info from the main activity
         val intent = intent
         viewModel = ViewModelProviders.of(this).get(RecipeIngredientViewModel::class.java)
-        recipeTitle = intent!!.getStringExtra("recipeTitle")
+        recipeTitle = intent.getStringExtra("recipeTitle")
         recipeServings = intent!!.getIntExtra("recipeServings",0)
         recipeID = intent!!.getIntExtra("recipeID",0)
         viewModel.ingredientList.observe(this, Observer { ingredients ->
@@ -61,7 +70,7 @@ class RecipeActivity: AppCompatActivity() {
 
         //Set the view
         recipeTitleView = recipe_Info_Name
-        recipeTitleView.text = "Title" + recipeTitle
+        recipeTitleView.text = recipeTitle
         recipeServingsView = recipeInfo_serving
         recipeServingsView.text= "Servings:" + recipeServings
         backButton = back_button
@@ -72,10 +81,28 @@ class RecipeActivity: AppCompatActivity() {
         //Set onclick listener for back button
         backButton.setOnClickListener{
             //Intent to rolls activity
-            val intent = Intent(this, RecipeActivity::class.java)
+            val intent = Intent(this, SearchActivity::class.java)
             startActivity(intent)
         }
 
+        add_to_Favorite.setOnClickListener {
+            val item = FavoriteItem(recipeTitle)
+            favoriteList.add(item)
+            writeNewFavorite(item)
+//            favRecyclerView.adapter = FavAdapter(favoriteList)
+//            recyclerView.layoutManager = LinearLayoutManager(FavActivity::class.java)
+//            recyclerView.setHasFixedSize(true)
+//            val adapter = favRecyclerView.adapter as FavAdapter
+//            adapter.notifyDataSetChanged()
+        }
+
+    }
+
+    private fun writeNewFavorite(favoriteItem: FavoriteItem) {
+        val uid = FirebaseAuth.getInstance().uid?: ""
+//        FirebaseDatabase.getInstance().getReference("/users/$uid").setValue(user)
+        val newId = FirebaseDatabase.getInstance().getReference("/favorites/$uid").push().key
+        FirebaseDatabase.getInstance().getReference("/favorites/$uid/$newId/name").setValue(favoriteItem.name)
     }
 
 }
