@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import kotlinx.android.synthetic.main.activity_favs.*
 import kotlinx.android.synthetic.main.activity_groceries.*
 import kotlinx.android.synthetic.main.activity_groceries.recyclerView
 import kotlinx.android.synthetic.main.activity_ingredients.*
@@ -74,9 +75,9 @@ class FavActivity : AppCompatActivity(){
                     }
                 }
 
-                recyclerView.adapter = FavAdapter(favList)
-                recyclerView.layoutManager = LinearLayoutManager(this@FavActivity)
-                recyclerView.setHasFixedSize(true)
+                favRecyclerView.adapter = FavAdapter(favList)
+                favRecyclerView.layoutManager = LinearLayoutManager(this@FavActivity)
+                favRecyclerView.setHasFixedSize(true)
             }
 
             override fun onCancelled(p0: DatabaseError) {
