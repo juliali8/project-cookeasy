@@ -38,7 +38,7 @@ import kotlinx.android.synthetic.main.enter_ingredient.exit
 import kotlinx.android.synthetic.main.enter_ingredient.submitItem
 import kotlinx.android.synthetic.main.grocery_item.*
 import kotlinx.android.synthetic.main.grocery_item.itemName
-import kotlinx.android.synthetic.main.ingredient_item.*
+import kotlinx.android.synthetic.main.ingredientlist_item.*
 import org.json.JSONObject
 
 

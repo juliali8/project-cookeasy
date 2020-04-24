@@ -1,28 +1,21 @@
 package com.example.cookeasy.adapters
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.View
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cookeasy.R
-import com.example.cookeasy.activities.IngredientsActivity
 import com.example.cookeasy.objects.IngredientItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import kotlinx.android.synthetic.main.ingredient_item.view.*
-import android.content.Context.LAYOUT_INFLATER_SERVICE
-import androidx.core.content.ContextCompat.getSystemService
-import com.example.cookeasy.objects.GroceryItem
+import kotlinx.android.synthetic.main.ingredientlist_item.view.*
 import kotlinx.android.synthetic.main.update_ingredient.*
 import kotlinx.android.synthetic.main.update_ingredient.view.*
 
@@ -32,7 +25,7 @@ class IngredientsAdapter(private val context: Context, private val ingredientLis
     private var index: Int = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IngredientViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(com.example.cookeasy.R.layout.ingredient_item, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(com.example.cookeasy.R.layout.ingredientlist_item, parent, false)
         return IngredientViewHolder(itemView)
     }
 

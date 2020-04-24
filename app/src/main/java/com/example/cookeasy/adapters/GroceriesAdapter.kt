@@ -23,9 +23,9 @@ import com.google.firebase.database.ktx.getValue
 import kotlinx.android.synthetic.main.activity_groceries.*
 import kotlinx.android.synthetic.main.activity_groceries.view.*
 import kotlinx.android.synthetic.main.grocery_item.view.*
-import kotlinx.android.synthetic.main.ingredient_item.view.*
-import kotlinx.android.synthetic.main.ingredient_item.view.deleteButton
-import kotlinx.android.synthetic.main.ingredient_item.view.itemName
+import kotlinx.android.synthetic.main.ingredientlist_item.view.*
+import kotlinx.android.synthetic.main.ingredientlist_item.view.deleteButton
+import kotlinx.android.synthetic.main.ingredientlist_item.view.itemName
 import kotlinx.android.synthetic.main.update_grocery.*
 import kotlinx.android.synthetic.main.update_grocery.view.*
 

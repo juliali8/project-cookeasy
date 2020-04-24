@@ -1,5 +1,6 @@
 package com.example.cookeasy
 
+import RecipeAdapter
 import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater

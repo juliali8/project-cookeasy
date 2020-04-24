@@ -25,7 +25,7 @@
         android:layout_above="@id/addItemBtn"
         android:clipToPadding="false"
         android:padding="5dp"
-        tools:listitem="@layout/ingredient_item" />
+        tools:listitem="@layout/ingredientlist_item" />
 
     <Button
         android:id="@+id/addItemBtn"

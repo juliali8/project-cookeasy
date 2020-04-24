@@ -11,7 +11,7 @@ import com.example.cookeasy.R
 import com.example.cookeasy.objects.GroceryItem
 import com.example.cookeasy.objects.IngredientItem
 import com.example.cookeasy.objects.RecipeItem
-import kotlinx.android.synthetic.main.ingredient_item.view.*
+import kotlinx.android.synthetic.main.ingredientlist_item.view.*
 
 class FavAdapter(private val recipeList: ArrayList<RecipeItem>) : RecyclerView.Adapter<FavAdapter.FavViewHolder>() {
 
